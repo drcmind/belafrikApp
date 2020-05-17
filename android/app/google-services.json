@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "366045514575",
+    "firebase_url": "https://belafrikapp-f775b.firebaseio.com",
+    "project_id": "belafrikapp-f775b",
+    "storage_bucket": "belafrikapp-f775b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:366045514575:android:6d54f4d288820ae080d33a",
+        "android_client_info": {
+          "package_name": "com.drcmind.belafrikapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "366045514575-si1hsiamr95ovp8h9m2dnirid8tauhp1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.drcmind.belafrikapp",
+            "certificate_hash": "f8bea7b1f9f68cec3a0e78dc1ae23d67155ffcfc"
+          }
+        },
+        {
+          "client_id": "366045514575-ckv1l2gdqu1kji15gots00a4cees54du.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChf9K2iTyVgvMP8Lu0ih5HVpm2NkJaTEg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "366045514575-ckv1l2gdqu1kji15gots00a4cees54du.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
