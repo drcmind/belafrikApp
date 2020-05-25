@@ -26,7 +26,7 @@ class _AccueilState extends State<Accueil> {
   final PageChat _pageSearch = PageChat();
   final PageCompte _pageCompte = PageCompte();
 
-  int pageIndex = 0;
+  //int pageIndex = 0;
 
   Widget _affichePage = PageAccueil();
 
@@ -68,7 +68,7 @@ class _AccueilState extends State<Accueil> {
             child: StreamProvider<List<BellaVotEe>>.value(
               value: ServiceBDD(idUtil: utilisateur.idUtil).bellasVotEes,
               child: StreamProvider<List<Chat>>.value(
-                value: ServiceBDD().chats,
+                value: ServiceBDD(idExp: utilisateur.idUtil).chats,
                 child: Scaffold(
                   body: _affichePage,
                   backgroundColor : Colors.grey[200],

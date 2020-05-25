@@ -1,10 +1,12 @@
 import 'package:belafrikapp/models/utilisateur.dart';
 import 'package:belafrikapp/services/bdd.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class ServiceAuth {
-
+  BuildContext context;
+  ServiceAuth({this.context});
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
@@ -38,13 +40,18 @@ class ServiceAuth {
       return _utilFromFirebaseUser(user);
 
     }catch (error){
-      print(error);
+      Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Verifier votre connexion internet' + error.toString()),
+          )
+      );
     }
   }
 
   //Deconnexion
   Future signOut() async {
     try{
+      await googleSignIn.signOut();
       return await _auth.signOut();
     }catch (error){
       return null;

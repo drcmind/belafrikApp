@@ -61,8 +61,8 @@ class _ListDilemmeState extends State<ListDilemme> {
                         maxLines: 1,
                       ),
                       trailing: dilemme[index].utilisateur['idUtil'] == utilisateur.idUtil  ? IconButton(
-                        onPressed: (){
-                          dynamic statusConnexion = Connectivity().checkConnectivity();
+                        onPressed: () async {
+                          dynamic statusConnexion = await  Connectivity().checkConnectivity();
                           if(statusConnexion == ConnectivityResult.none){
                             Scaffold.of(context).showSnackBar(
                               SnackBar(
@@ -88,20 +88,29 @@ class _ListDilemmeState extends State<ListDilemme> {
                                   FlatButton(
                                     child: Text('OUI'),
                                     onPressed: buttonDesactivE ? null : () async {
-                                      setState(() =>  buttonDesactivE = true);
-                                      Navigator.pop(context);
-                                      Scaffold.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: Text('Suppression encours...'),
-                                        )
-                                      );
-                                      await ServiceBDD().suppressionDilemme(
-                                          dilemme[index].idPost, utilisateur.idUtil, context);
-                                      Scaffold.of(context).showSnackBar(
-                                          SnackBar(
-                                            content: Text('Suppremé avec succès'),
-                                          )
-                                      );
+                                      dynamic statusConnexion = await  Connectivity().checkConnectivity();
+                                      if(statusConnexion == ConnectivityResult.none){
+                                        Scaffold.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text('Aucune connexion internet'),
+                                            )
+                                        );
+                                      }else{
+                                        setState(() =>  buttonDesactivE = true);
+                                        Navigator.pop(context);
+                                        Scaffold.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text('Suppression encours...'),
+                                            )
+                                        );
+                                        await ServiceBDD().suppressionDilemme(
+                                            dilemme[index].idPost, utilisateur.idUtil, context);
+                                        Scaffold.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text('Suppremé avec succès'),
+                                            )
+                                        );
+                                      }
                                     },
                                   )
                                 ],
@@ -274,7 +283,7 @@ class _ListDilemmeState extends State<ListDilemme> {
                       children: <Widget>[
                         GestureDetector(
                           onTap: buttonDesactivE ? null : () async {
-                            dynamic statusConnexion = Connectivity().checkConnectivity();
+                            dynamic statusConnexion = await Connectivity().checkConnectivity();
                             if(statusConnexion == ConnectivityResult.none){
                               Scaffold.of(context).showSnackBar(
                                 SnackBar(

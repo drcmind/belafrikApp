@@ -1,6 +1,9 @@
+import 'package:belafrikapp/models/utilisateur.dart';
+import 'package:belafrikapp/services/bdd.dart';
 import 'package:belafrikapp/templates/widgets/listDesChats.dart';
 import 'package:belafrikapp/templates/widgets/listDesMembres.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PageChat extends StatefulWidget {
   @override
@@ -10,12 +13,16 @@ class PageChat extends StatefulWidget {
 class _PageChatState extends State<PageChat> {
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Text(
           'Discussions',
           style: TextStyle(color: Colors.black),
         ),
+        elevation: 0.0,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search, color: Colors.black,),

@@ -83,18 +83,10 @@ class _LoginPage2State extends State<LoginPage2> {
                 SizedBox(height: 5.0,),
                 MaterialButton(
                   onPressed: () async {
-                    dynamic statusConnexion = Connectivity().checkConnectivity();
-                    if(statusConnexion == ConnectivityResult.none){
-                      Scaffold.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Verifier votre connexion internet'),
-                        )
-                      );
-                    }else{
-                      setState(() {
+                    setState(() {
                         enCoursDeChargement = true;
                       });
-                      ServiceAuth _auth = ServiceAuth();
+                      ServiceAuth _auth = ServiceAuth(context: context);
                       dynamic result = await _auth.signInWithGoogle();
                       if(result == null){
                         setState(() {
@@ -103,7 +95,6 @@ class _LoginPage2State extends State<LoginPage2> {
                       }else{
                         Navigator.pop(context);
                       }
-                    }
                   },
                   color: Colors.redAccent,
                   child: Text(

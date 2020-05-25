@@ -1,5 +1,6 @@
 import 'package:belafrikapp/models/utilisateur.dart';
 import 'package:belafrikapp/services/authentification.dart';
+import 'package:belafrikapp/templates/widgets/message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +10,7 @@ class ProfilUtilisateur extends StatefulWidget {
 
   String idUtil, nomUtil, photoUtil, lastImgUrl, emailUtil;
   int nbrePost; Timestamp dateInscription;
+
   ProfilUtilisateur({this.idUtil, this.nomUtil, this.photoUtil,
     this.lastImgUrl, this.emailUtil, this.nbrePost, this.dateInscription});
 
@@ -132,7 +134,12 @@ class _ProfilUtilisateurState extends State<ProfilUtilisateur> {
                                 ),),
                                 color: Colors.redAccent,
                                 onPressed: (){
-
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Messages(
+                                    idExp: utilisateur.idUtil,
+                                    idDest: widget.idUtil,
+                                    nom: widget.nomUtil,
+                                    imgUrl: widget.photoUtil,
+                                  )));
                                 },
                               ),
                               SizedBox(width: 10.0,),

@@ -15,7 +15,7 @@ class _ListDeBellasVotEesState extends State<ListDeBellasVotEes> {
     final top10List = Provider.of<List<BellaVotEe>>(context) ?? [];
 
     return  SliverPadding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0, bottom: 16.0),
       sliver: SliverStaggeredGrid.countBuilder(
         crossAxisCount: 2,
         mainAxisSpacing: 8.0,

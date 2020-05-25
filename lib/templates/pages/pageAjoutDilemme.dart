@@ -257,8 +257,32 @@ class _PageAjoutDilemmeState extends State<PageAjoutDilemme> {
     final utilisateur = Provider.of<Utilisateur>(context);
     final donnEeUtil = Provider.of<DonnEesUtil>(context);
 
-    enregistrerDilemme() async {
-      setState(() => _enProcessus = true);
+    Future<void> enregistrerDilemme() async {
+
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => SimpleDialog(
+            title: Text('Envoi de dilemme...'),
+            shape: CircleBorder(),
+            children: <Widget>[
+              Center(
+                child: Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 40.0,
+                      backgroundImage: AssetImage('assets/logo.jpg'),
+                    ),
+                    SizedBox(height: 20.0,),
+                    Padding(
+                      padding: EdgeInsets.only(left: 130, right: 130),
+                      child: LinearProgressIndicator(),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ));
 
       //Eregistrer image bella1 sur Cloud Storage
       StorageReference reference =
@@ -289,6 +313,7 @@ class _PageAjoutDilemmeState extends State<PageAjoutDilemme> {
             )
         );
       }else{
+        Navigator.pop(context);
         Navigator.pushReplacementNamed(context, '/accueil');
       }
     }
@@ -305,8 +330,8 @@ class _PageAjoutDilemmeState extends State<PageAjoutDilemme> {
             floating: true,
             actions: <Widget>[
               MaterialButton(
-                onPressed: () {
-                  dynamic statusDeConnexion = Connectivity().checkConnectivity();
+                onPressed: () async {
+                  dynamic statusDeConnexion = await Connectivity().checkConnectivity();
                   if(statusDeConnexion == ConnectivityResult.none){
                     Scaffold.of(context).showSnackBar(
                       SnackBar(

@@ -1,3 +1,4 @@
+import 'package:belafrikapp/models/bellaVotEe.dart';
 import 'package:belafrikapp/templates/widgets/bellaVotEeList.dart';
 import 'package:belafrikapp/templates/widgets/listTop10.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,9 @@ class PageExplorer extends StatefulWidget {
 class _PageExplorerState extends State<PageExplorer> {
   @override
   Widget build(BuildContext context) {
+
+    final top10List = Provider.of<List<BellaVotEe>>(context) ?? [];
+
     return Center(
       child: SafeArea(
         child: CustomScrollView(
@@ -51,7 +55,7 @@ class _PageExplorerState extends State<PageExplorer> {
                     Padding(
                       padding: const EdgeInsets.only(left:16.0, right: 16.0, bottom: 16.0),
                       child: Text(
-                        'Trouvez ici toutes les bellas votés ',
+                        'Plus de ${top10List.length} bellas, beauté déjà approuvée',
                         style: Theme.of(context).textTheme.display1.copyWith(
                             color: Colors.black
                         ),
