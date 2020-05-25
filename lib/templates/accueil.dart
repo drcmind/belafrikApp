@@ -9,6 +9,9 @@ import 'package:belafrikapp/templates/pages/pageAjoutDilemme.dart';
 import 'package:belafrikapp/templates/pages/pageChat.dart';
 import 'package:belafrikapp/templates/pages/pageCompte.dart';
 import 'package:belafrikapp/templates/pages/pageExplore.dart';
+import 'package:belafrikapp/templates/pages/pageCompte.dart';
+import 'package:belafrikapp/templates/pages/pageExplore.dart';
+import 'package:belafrikapp/templates/pages/pageSearch.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,8 +28,6 @@ class _AccueilState extends State<Accueil> {
   final PageAjoutDilemme _pageAjoutDilemme = PageAjoutDilemme();
   final PageChat _pageSearch = PageChat();
   final PageCompte _pageCompte = PageCompte();
-
-  //int pageIndex = 0;
 
   Widget _affichePage = PageAccueil();
 
@@ -93,7 +94,7 @@ class _AccueilState extends State<Accueil> {
             ),
           ),
         ),
-      ),
+      )
     );
   }
 }

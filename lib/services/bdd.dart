@@ -7,7 +7,6 @@ import 'package:belafrikapp/models/utilisateur.dart';
 import 'package:belafrikapp/models/vote.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 class ServiceBDD {
@@ -45,38 +44,38 @@ class ServiceBDD {
 
   //methode pour enregister un nouveau utilisateur
   Future<void> saveUserData(nomUtil, emailUtil, photoUrl) async {
-    try{
-      DocumentReference documentReference = collectionUtilisateurs.document(idUtil);
+    try {
+      DocumentReference documentReference = collectionUtilisateurs.document(
+          idUtil);
       documentReference.snapshots().listen((doc) async {
-        if(doc.exists){
+        if (doc.exists) {
           return null;
-        }else{
+        } else {
           return await collectionUtilisateurs.document(idUtil).setData({
-            'idUtil' : idUtil,
-            'nomUtil' : nomUtil,
-            'emailUtil' : emailUtil,
-            'photoUrl' : photoUrl,
-            'nbrePost' : 0,
-            'lastImgPost' : '',
-            'dateInscription' : FieldValue.serverTimestamp()
+            'idUtil': idUtil,
+            'nomUtil': nomUtil,
+            'emailUtil': emailUtil,
+            'photoUrl': photoUrl,
+            'nbrePost': 0,
+            'lastImgPost': '',
+            'dateInscription': FieldValue.serverTimestamp()
           });
         }
       });
-    }catch (error){
+    } catch (error) {
       print(error.toString());
     }
   }
-
   //methode pour fetching les donées utilisateurs
   DonnEesUtil _donnEesUtilFromSnapshot(DocumentSnapshot snapshot) {
     return DonnEesUtil(
-      idUtil: snapshot.data['idUtil'] ?? '',
-      nomUtil: snapshot.data['nomUtil'] ?? '',
-      emailUtil: snapshot.data['emailUtil'] ?? '',
-      photoUrl: snapshot.data['photoUrl'] ?? '',
-      nbrePost: snapshot.data['nbrePost'] ?? '',
-      lastImgPost: snapshot.data['lastImgPost'] ?? '',
-      dateInscription: snapshot.data['dateInscription'] ?? ''
+      idUtil: snapshot.data['idUtil'],
+      nomUtil: snapshot.data['nomUtil'],
+      emailUtil: snapshot.data['emailUtil'],
+      photoUrl: snapshot.data['photoUrl'],
+      nbrePost: snapshot.data['nbrePost'],
+      lastImgPost: snapshot.data['lastImgPost'],
+      dateInscription: snapshot.data['dateInscription']
     );
   }
 
@@ -89,7 +88,7 @@ class ServiceBDD {
   List<DonnEesUtil> _listUtilFromSnapshot(QuerySnapshot snapshot){
     return snapshot.documents.map((doc){
       return DonnEesUtil(
-          idUtil: doc.data['idUtil'] ?? '',
+          idUtil: doc.data['idUtil'],
           nomUtil: doc.data['nomUtil'],
           emailUtil: doc.data['emailUtil'],
           photoUrl: doc.data['photoUrl'],

@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class ServiceAuth {
+
   BuildContext context;
   ServiceAuth({this.context});
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
@@ -40,11 +42,7 @@ class ServiceAuth {
       return _utilFromFirebaseUser(user);
 
     }catch (error){
-      Scaffold.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Verifier votre connexion internet' + error.toString()),
-          )
-      );
+      print(error);
     }
   }
 

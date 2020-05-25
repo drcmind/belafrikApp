@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'dart:io';
-
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +33,6 @@ class _PageAjoutDilemmeState extends State<PageAjoutDilemme> {
   String nomBella2 = '';
   String urlImgB1, urlImgB2;
   String nationalitB1, nationalitB2;
-
   bool _enProcessus = false;
   File _fichierSelectionEB1;
   File _fichierSelectionEB2;

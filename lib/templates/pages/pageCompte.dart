@@ -14,7 +14,6 @@ class _PageCompteState extends State<PageCompte> {
   Widget build(BuildContext context) {
 
     final donnEesUtil = Provider.of<DonnEesUtil>(context);
-
     final dateDeFirestore = donnEesUtil.dateInscription.toDate();
     String date = DateFormat.yMMMMd().format(dateDeFirestore);
 
