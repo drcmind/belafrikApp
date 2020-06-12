@@ -261,21 +261,18 @@ class _PageAjoutDilemmeState extends State<PageAjoutDilemme> {
           context: context,
           barrierDismissible: false,
           builder: (_) => SimpleDialog(
-            title: Text('Envoi de dilemme...'),
+            title: Text('Envoi...'),
             shape: CircleBorder(),
             children: <Widget>[
               Center(
                 child: Column(
                   children: <Widget>[
                     CircleAvatar(
-                      radius: 40.0,
+                      radius: 30.0,
                       backgroundImage: AssetImage('assets/logo.jpg'),
                     ),
-                    SizedBox(height: 20.0,),
-                    Padding(
-                      padding: EdgeInsets.only(left: 130, right: 130),
-                      child: LinearProgressIndicator(),
-                    )
+                    SizedBox(height: 6.0,),
+                    LinearProgressIndicator()
                   ],
                 ),
               )

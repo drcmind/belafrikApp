@@ -1,7 +1,7 @@
 import 'package:belafrikapp/models/chat.dart';
 import 'package:belafrikapp/models/utilisateur.dart';
 import 'package:belafrikapp/services/bdd.dart';
-import 'package:belafrikapp/templates/widgets/message.dart';
+import 'package:belafrikapp/templates/widgets/inBoxMessages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -25,12 +25,13 @@ class _ListesChatsState extends State<ListesChats> {
 
           final dateDeFirestore = listDesChats[index].timestamp.toDate();
           String date = DateFormat.MMMd().format(dateDeFirestore);
+          bool cMoi = utilisateurs.idUtil == listDesChats[index].exp['idExp'];
+          bool contientSlmaTxt = listDesChats[index].msg != '';
 
-          return utilisateurs.idUtil == listDesChats[index].exp['idExp'] ? Container(
-            margin: EdgeInsets.only(top: 2.0, left: 8.0, right: 8.0),
+          return cMoi ? Container(
+            margin: EdgeInsets.only(bottom: 2.0),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(10.0),
             ),
             child: ListTile(
                 onTap: (){
@@ -39,46 +40,33 @@ class _ListesChatsState extends State<ListesChats> {
                     imgUrl : listDesChats[index].dest['imgUrlDest'],
                     idExp : listDesChats[index].exp['idExp'],
                     idDest : listDesChats[index].dest['idDest'],
-                    idMsg: 'message déjà vu',
+                    emailDest: listDesChats[index].dest['emailDest'],
+                    nbreMsgNonLis: 0,
                   )));
                 },
-                onLongPress: () => showDialog(context: context, builder: (context)
-                  => SimpleDialog(
-                    contentPadding: EdgeInsets.all(8.0),
-                    children: <Widget>[
-                      GestureDetector(
-                        onTap: (){
-                          Navigator.pop(context);
-                          showDialog(context: context, builder: (_)
-                          => AlertDialog(
-                            contentPadding: EdgeInsets.all(8.0),
-                            title: Text('Supprimer la conversation ?'),
-                            content: Text('Cette conversation sera '
-                                'supprimée de votre boite de reception. '
-                                '${listDesChats[index].dest['nomDest']} '
-                                'pourra encore la voir'),
-                            actions: <Widget>[
-                              FlatButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text('ANNULER'),
-                              ),
-                              FlatButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  ServiceBDD()
-                                      .supprimerConversation(listDesChats[index].exp['idExp'],
-                                      listDesChats[index].dest['idDest']);
-                                },
-                                child: Text('SUPPRIMER'),
-                              )
-                            ],
-                          ));
-                        },
-                        child: Text('Supprimer la conversation')),
-                      Text('Masquer les notification'),
-                      Text('Signaler ${listDesChats[index].dest['nomDest']}')
-                    ],
-                  )),
+                onLongPress: () => showDialog(context: context, builder: (_)
+                => AlertDialog(
+                  title: Text('Supp la conversation ?'),
+                  content: Text('Cette conversation sera '
+                      'supprimée de votre boite de reception. '
+                      '${listDesChats[index].dest['nomDest']} '
+                      'pourra encore la voir'),
+                  actions: <Widget>[
+                    FlatButton(
+                      onPressed: () => setState(() => Navigator.pop(context)),
+                      child: Text('ANNULER'),
+                    ),
+                    FlatButton(
+                      onPressed: () {
+                        setState(() => Navigator.pop(context));
+                        ServiceBDD()
+                            .supprimerConversation(listDesChats[index].exp['idExp'],
+                            listDesChats[index].dest['idDest']);
+                      },
+                      child: Text('SUPPRIMER'),
+                    )
+                  ],
+                )),
                 leading: CircleAvatar(
                   backgroundColor: Colors.grey,
                   backgroundImage: NetworkImage(listDesChats[index].dest['imgUrlDest']),
@@ -88,8 +76,12 @@ class _ListesChatsState extends State<ListesChats> {
                   maxLines: 1,
                   style: Theme.of(context).textTheme.title,
                 ),
-                subtitle: Text(
+                subtitle: contientSlmaTxt ? Text(
                   listDesChats[index].msg,
+                  style: Theme.of(context).textTheme.body1,
+                  maxLines: 1,
+                ) : Text(
+                  'Vous aviez envoyé une photo',
                   style: Theme.of(context).textTheme.body1,
                   maxLines: 1,
                 ),
@@ -109,64 +101,41 @@ class _ListesChatsState extends State<ListesChats> {
                 )
             ),
           ) : Container(
-            margin: EdgeInsets.symmetric(vertical: 02.0, horizontal: 8.0),
+            margin: EdgeInsets.only(bottom: 2.0),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(20.0),
             ),
             child: ListTile(
-                onTap: listDesChats[index].nbreMsgNonLis >= 1 ? () {
+                onTap: ()  {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => Messages(
                     nom :listDesChats[index].exp['nomExp'],
+                    emailDest: listDesChats[index].exp['nomExp'],
                     imgUrl : listDesChats[index].exp['imgUrlExp'],
                     idDest : listDesChats[index].exp['idExp'],
                     idExp : listDesChats[index].dest['idDest'],
-                    idMsg: listDesChats[index].idMsg,
-                  )));
-                } : () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Messages(
-                    nom :listDesChats[index].exp['nomExp'],
-                    imgUrl : listDesChats[index].exp['imgUrlExp'],
-                    idDest : listDesChats[index].exp['idExp'],
-                    idExp : listDesChats[index].dest['idDest'],
-                    idMsg: 'message déjà vu',
+                    nbreMsgNonLis:listDesChats[index].nbreMsgNonLis,
                   )));
                 },
-                onLongPress: () => showDialog(context: context, builder: (context)
-                => SimpleDialog(
-                  contentPadding: EdgeInsets.all(8.0),
-                  children: <Widget>[
-                    GestureDetector(
-                        onTap: (){
-                          Navigator.pop(context);
-                          showDialog(context: context, builder: (_)
-                          => AlertDialog(
-                            contentPadding: EdgeInsets.all(8.0),
-                            title: Text('Supprimer la conversation ?'),
-                            content: Text('Cette conversation sera '
-                                'supprimée de votre boite de reception. '
-                                '${listDesChats[index].exp['nomExp']} '
-                                'pourra encore la voir'),
-                            actions: <Widget>[
-                              FlatButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text('ANNULER'),
-                              ),
-                              FlatButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  ServiceBDD()
-                                      .supprimerConversation(listDesChats[index].dest['idDest'],
-                                      listDesChats[index].exp['idExp']);
-                                },
-                                child: Text('SUPPRIMER'),
-                              )
-                            ],
-                          ));
+                onLongPress: () => showDialog(context: context, builder: (_)
+                => AlertDialog(
+                  title: Text('Supp. la conversation ?'),
+                  content: Text('Cette conversation sera '
+                      'supprimée de votre boite de reception. '
+                      '${listDesChats[index].exp['nomExp']} '
+                      'pourra encore la voir'),
+                  actions: <Widget>[
+                    FlatButton(
+                      onPressed: () => setState(() => Navigator.pop(context)),
+                      child: Text('ANNULER'),
+                    ),
+                    FlatButton(
+                      onPressed: () {
+                        setState(() => Navigator.pop(context));
+                        ServiceBDD().supprimerConversation(listDesChats[index].dest['idDest'],
+                            listDesChats[index].exp['idExp']);
                         },
-                        child: Text('Supprimer la conversation')),
-                    Text('Masquer les notification'),
-                    Text('Signaler ${listDesChats[index].dest['nomDest']}')
+                      child: Text('SUPPRIMER'),
+                    )
                   ],
                 )),
                 leading: CircleAvatar(
@@ -178,8 +147,12 @@ class _ListesChatsState extends State<ListesChats> {
                   style: Theme.of(context).textTheme.title,
                   maxLines: 1,
                 ),
-                subtitle: Text(
+                subtitle: contientSlmaTxt ? Text(
                   listDesChats[index].msg,
+                  style: Theme.of(context).textTheme.body1,
+                  maxLines: 1,
+                ) : Text(
+                  'Vous aviez reçu une photo',
                   style: Theme.of(context).textTheme.body1,
                   maxLines: 1,
                 ),

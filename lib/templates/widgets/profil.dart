@@ -1,10 +1,10 @@
 import 'package:belafrikapp/models/utilisateur.dart';
-import 'package:belafrikapp/services/authentification.dart';
-import 'package:belafrikapp/templates/widgets/message.dart';
+import 'package:belafrikapp/templates/widgets/inBoxMessages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfilUtilisateur extends StatefulWidget {
 
@@ -26,18 +26,23 @@ class _ProfilUtilisateurState extends State<ProfilUtilisateur> {
     final dateDeFirestore = widget.dateInscription.toDate();
     String date = DateFormat.yMMMMd().format(dateDeFirestore);
 
+    _lancerGmail() async {
+      String url = 'mailto:${widget.emailUtil}';
+      if(await canLaunch(url)){
+        await launch(url);
+      }else{
+        throw 'Impossible d\'envoyer le mail à $url';
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(
           color: Colors.black,
         ),
-        title: utilisateur.idUtil != widget.idUtil
-            ? Text(
+        title: Text(
           'Profil de ${widget.nomUtil}',
-          style: TextStyle(color: Colors.black),
-        ):Text(
-          'Mon compte',
           style: TextStyle(color: Colors.black),
         ),
       ),
@@ -107,20 +112,7 @@ class _ProfilUtilisateurState extends State<ProfilUtilisateur> {
                           ),
                         ],
                       ),
-                      utilisateur.idUtil == widget.idUtil ? Padding(
-                        padding: EdgeInsets.only(right: 8.0),
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: MaterialButton(
-                            child: Text('Deconnexion', style: TextStyle(color: Colors.white),),
-                            color: Colors.redAccent,
-                            onPressed: (){
-                              ServiceAuth auth = ServiceAuth();
-                              auth.signOut();
-                            },
-                          ),
-                        ),
-                      ): Padding(
+                      Padding(
                         padding: EdgeInsets.only(right: 8.0),
                         child: Align(
                           alignment: Alignment.centerRight,
@@ -139,20 +131,20 @@ class _ProfilUtilisateurState extends State<ProfilUtilisateur> {
                                     idDest: widget.idUtil,
                                     nom: widget.nomUtil,
                                     imgUrl: widget.photoUtil,
+                                    emailDest: widget.emailUtil,
+                                    nbreMsgNonLis: 0,
                                   )));
                                 },
                               ),
                               SizedBox(width: 10.0,),
                               MaterialButton(
                                 child: Text(
-                                  'VOIR SES DILEMMES', style: Theme.of(context)
+                                  'ENVOYER UN EMAIL', style: Theme.of(context)
                                     .textTheme.button.copyWith(
                                     color: Colors.white, letterSpacing: 1.5
                                 ),),
-                                color: Colors.blueGrey,
-                                onPressed: (){
-
-                                },
+                                color: Colors.black,
+                                onPressed: _lancerGmail,
                               )
                             ],
                           ),
@@ -163,6 +155,21 @@ class _ProfilUtilisateurState extends State<ProfilUtilisateur> {
                 ),
               ),
             ),
+          ),
+          DefaultTabController(
+            length: 3,
+            child: Column(
+              children: <Widget>[
+                TabBar(
+                  labelColor: Colors.black,
+                  tabs: <Widget>[
+                    Tab(text: '2 Dilemme(s) posté(s)'),
+                    Tab(text: '5 Dilemme(s) Voté(s)'),
+                    Tab(text: '2 Bellas votée(s)'),
+                  ],
+                ),
+              ],
+            )
           )
         ],
       ),

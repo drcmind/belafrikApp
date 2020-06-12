@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         ),
         routes: {
           '/passerelle' : (context) => Passerelle(),
-          '/accueil' : (context) => Accueil()
+          '/accueil' : (context) => Accueil(),
         },
       ),
     );

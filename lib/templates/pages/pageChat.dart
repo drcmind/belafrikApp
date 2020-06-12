@@ -22,7 +22,6 @@ class _PageChatState extends State<PageChat> {
           'Discussions',
           style: TextStyle(color: Colors.black),
         ),
-        elevation: 0.0,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search, color: Colors.black,),

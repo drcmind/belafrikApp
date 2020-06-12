@@ -5,6 +5,11 @@ class Utilisateur {
   Utilisateur({this.idUtil});
 }
 
+class UserBlockE{
+  String isBlockE;
+  UserBlockE({this.isBlockE});
+}
+
 class DonnEesUtil {
   String idUtil, nomUtil, photoUrl, emailUtil, lastImgPost;
   int nbrePost; Timestamp dateInscription;

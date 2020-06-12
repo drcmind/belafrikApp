@@ -13,6 +13,7 @@ class _ListUtilState extends State<ListUtil> {
   Widget build(BuildContext context) {
 
     final listUtil = Provider.of<List<DonnEesUtil>>(context) ?? [];
+    final utilisateur = Provider.of<Utilisateur>(context);
 
     return ListView.builder(
       scrollDirection: Axis.horizontal,
@@ -31,7 +32,7 @@ class _ListUtilState extends State<ListUtil> {
               dateInscription: listUtil[index].dateInscription,
             )));
           },
-          child: Container(
+          child: utilisateur.idUtil != listUtil[index].idUtil ? Container(
             height: 100,
             width: 100,
             child: Container(
@@ -86,7 +87,7 @@ class _ListUtilState extends State<ListUtil> {
                 ),
               ),
             ),
-          ),
+          ): Container(),
         );
       },
     );

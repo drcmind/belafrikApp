@@ -1,6 +1,6 @@
 import 'package:belafrikapp/models/utilisateur.dart';
 import 'package:belafrikapp/services/bdd.dart';
-import 'package:belafrikapp/templates/widgets/message.dart';
+import 'package:belafrikapp/templates/widgets/inBoxMessages.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -42,6 +42,8 @@ class _ListesDesMembresState extends State<ListesDesMembres> {
                     idDest: listUtil[index].idUtil,
                     nom: listUtil[index].nomUtil,
                     imgUrl: listUtil[index].photoUrl,
+                    emailDest:listUtil[index].emailUtil,
+                    nbreMsgNonLis: 0,
                   )));
                 },
                 leading: CircleAvatar(

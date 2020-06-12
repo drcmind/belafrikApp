@@ -1,6 +1,8 @@
 import 'package:belafrikapp/models/bellaVotEe.dart';
 import 'package:belafrikapp/models/chat.dart';
+import 'package:belafrikapp/models/commentaire.dart';
 import 'package:belafrikapp/models/dilemmePost.dart';
+import 'package:belafrikapp/models/dilemmePoste.dart';
 import 'package:belafrikapp/models/message.dart';
 import 'package:belafrikapp/models/top10.dart';
 import 'package:belafrikapp/models/utilisateur.dart';
@@ -10,9 +12,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class ServiceBDD {
-  String idUtil, idPost, idExp, idDest, idMsg;
+  String idUtil, idPost, idExp, idDest, idMsg, idCmtr;
   ServiceBDD({ this.idUtil, this.idPost, this.idExp,
-    this.idDest, this.idMsg });
+    this.idDest, this.idMsg, this.idCmtr });
 
   //collection de reference Utilisateur
   final CollectionReference collectionUtilisateurs = Firestore.instance.collection('utilisateurs');
@@ -339,7 +341,8 @@ class ServiceBDD {
   }
 
   //créer une nvlle discussion
-  Future<void> envoyezMsg (nomExp, imgUrlExp, idExp, idDest, nomDest, imgUrlDest, msgTxt){
+  Future<void> envoyezMsg (nomExp, emailExp, imgUrlExp, idExp, idDest, nomDest, emailDest,
+      imgUrlDest, msgTxt, msgImage){
     try{
       String idMonChat = '$idExp$idDest';
       String idSonChat = '$idDest$idExp';
@@ -354,62 +357,38 @@ class ServiceBDD {
           await collectionRoom.document(idExp).collection('chats')
               .document(idMonChat).updateData({
             'nbreMsgNonLis' : FieldValue.increment(1),
-            'idMsg' : idMessage,
-            'msg': msgTxt,
+            'msgTxt' : msgTxt,
+            'msgImage' : msgImage,
             'timestamp' : FieldValue.serverTimestamp(),
-            'exp' : {
-              'idExp' : idExp,
-              'nomExp' : nomExp,
-              'imgUrlExp' : imgUrlExp,
-            },
-            'dest' : {
-              'idDest':idDest,
-              'nomDest' : nomDest,
-              'imgUrlDest' : imgUrlDest
-            }
           });
 
           await collectionRoom.document(idDest).collection('chats')
               .document(idSonChat).updateData({
             'nbreMsgNonLis' : FieldValue.increment(1),
-            'msg': msgTxt,
-            'idMsg' : idMessage,
+            'msgTxt' : msgTxt,
+            'msgImage' : msgImage,
             'timestamp' : FieldValue.serverTimestamp(),
-            'exp' : {
-              'idExp' : idExp,
-              'nomExp' : nomExp,
-              'imgUrlExp' : imgUrlExp,
-            },
-            'dest' : {
-              'idDest':idDest,
-              'nomDest' : nomDest,
-              'imgUrlDest' : imgUrlDest
-            }
           });
 
           await collectionRoom.document(idDest)
               .collection('chats').document(idSonChat).collection('messages')
               .document(idMessage).setData({
-            'idMsg' : idMessage,
+            'idMsg': idMessage,
             'idExp' : idExp,
             'idDest' : idDest,
-            'msgVu' : false,
-            'nomDest':nomDest,
-            'imgUrlDest' : imgUrlDest,
-            'msg' : msgTxt,
+            'msgTxt'  : msgTxt,
+            'msgImage' : msgImage,
             'timestamp' : FieldValue.serverTimestamp()
           });
 
           return await collectionRoom.document(idExp)
               .collection('chats').document(idMonChat).collection('messages')
               .document(idMessage).setData({
-            'idMsg' : idMessage,
+            'idMsg': idMessage,
             'idExp' : idExp,
             'idDest' : idDest,
-            'msgVu' : false,
-            'nomDest':nomDest,
-            'imgUrlDest' : imgUrlDest,
-            'msg' : msgTxt,
+            'msgTxt'  : msgTxt,
+            'msgImage' : msgImage,
             'timestamp' : FieldValue.serverTimestamp()
           });
 
@@ -417,16 +396,18 @@ class ServiceBDD {
 
           await collectionRoom.document(idDest).collection('chats').document(idSonChat).setData({
             'nbreMsgNonLis' : 1,
-            'idMsg' : idMessage,
-            'msg': msgTxt,
+            'msgTxt' : msgTxt,
+            'msgImage' : msgImage,
             'timestamp' : FieldValue.serverTimestamp(),
             'exp' : {
               'idExp' : idExp,
               'nomExp' : nomExp,
+              'emailExp' : emailExp,
               'imgUrlExp' : imgUrlExp,
             },
             'dest' : {
               'idDest':idDest,
+              'emailDest' : emailDest,
               'nomDest' : nomDest,
               'imgUrlDest' : imgUrlDest
             }
@@ -434,16 +415,18 @@ class ServiceBDD {
 
           await collectionRoom.document(idExp).collection('chats').document(idMonChat).setData({
             'nbreMsgNonLis' : 1,
-            'msg': msgTxt,
-            'idMsg' : idMessage,
+            'msgTxt' : msgTxt,
+            'msgImage' : msgImage,
             'timestamp' : FieldValue.serverTimestamp(),
             'exp' : {
               'idExp' : idExp,
               'nomExp' : nomExp,
+              'emailExp' : emailExp,
               'imgUrlExp' : imgUrlExp,
             },
             'dest' : {
               'idDest':idDest,
+              'emailDest' : emailDest,
               'nomDest' : nomDest,
               'imgUrlDest' : imgUrlDest
             }
@@ -452,25 +435,21 @@ class ServiceBDD {
           await collectionRoom.document(idDest)
               .collection('chats').document(idSonChat).collection('messages')
               .document(idMessage).setData({
-            'idMsg' : idMessage,
+            'idMsg': idMessage,
             'idExp' : idExp,
             'idDest' : idDest,
-            'msgVu' : false,
-            'nomDest':nomDest,
-            'imgUrlDest' : imgUrlDest,
-            'msg' : msgTxt,
+            'msgTxt'  : msgTxt,
+            'msgImage' : msgImage,
             'timestamp' : FieldValue.serverTimestamp()
           });
           return await collectionRoom.document(idExp)
               .collection('chats').document(idMonChat).collection('messages')
               .document(idMessage).setData({
-            'idMsg' : idMessage,
+            'idMsg': idMessage,
             'idExp' : idExp,
             'idDest' : idDest,
-            'msgVu' : false,
-            'nomDest':nomDest,
-            'imgUrlDest' : imgUrlDest,
-            'msg' : msgTxt,
+            'msgTxt'  : msgTxt,
+            'msgImage' : msgImage,
             'timestamp' : FieldValue.serverTimestamp()
           });
         }
@@ -483,9 +462,8 @@ class ServiceBDD {
   List<Chat> listChatFromSnapShot(QuerySnapshot snapshot){
     return snapshot.documents.map((doc){
       return Chat(
-          idChat: doc.data['idChat'],
-          idMsg: doc.data['idMsg'],
-          msg : doc.data['msg'],
+          msg : doc.data['msgTxt'],
+          msgImage: doc.data['msgImage'],
           nbreMsgNonLis : doc.data['nbreMsgNonLis'],
           timestamp : doc.data['timestamp'],
           exp : doc.data['exp'],
@@ -505,45 +483,39 @@ class ServiceBDD {
   List<Message> listMessageFromSnapShot(QuerySnapshot snapshot){
     return snapshot.documents.map((doc){
       return Message(
-          idMsg: doc.data['idMsg'] ?? '',
-          idExp: doc.data['idExp'] ?? '',
-          nomDest: doc.data['nomDest'] ?? '',
-          msgVu: doc.data['msgVu'] ?? '',
-          msg : doc.data['msg'] ?? '',
-          imgUrlDest: doc.data['imgUrlDest'] ?? '',
-          timestamp : doc.data['timestamp'] ?? '',
+        idMsg: doc.data['idMsg'] ?? '',
+        idExp: doc.data['idExp'] ?? '',
+        idDest: doc.data['idDest'] ?? '',
+        msg : doc.data['msgTxt'] ?? '',
+        msgImage: doc.data['msgImage'] ?? '',
+        timestamp : doc.data['timestamp'] ?? '',
       );
     }).toList();
   }
 
   Stream<List<Message>> get messages {
     return collectionRoom.document(idExp).collection('chats')
-        .document('$idExp$idDest').collection('messages').orderBy('timestamp')
+        .document('$idExp$idDest').collection('messages')
+        .orderBy('timestamp', descending: true)
         .snapshots().map(listMessageFromSnapShot);
   }
 
   Future<void> msgLis() async {
     try{
-      await collectionRoom.document(idExp).collection('chats')
-          .document('$idExp$idDest').updateData({'nbreMsgNonLis' : 0});
       return await collectionRoom.document(idExp).collection('chats')
-          .document('$idExp$idDest').collection('messages')
-          .document(idMsg).updateData({'msgVu' : false});
+          .document('$idExp$idDest').updateData({'nbreMsgNonLis' : 0});
     }catch (error){
       print(error.toString());
     }
   }
 
-  Future<void> supprimerConversation(idExp, idDest) async {
-    return await collectionRoom.document(idExp).collection('chats')
-        .document('$idExp$idDest').delete();
-  }
+  Future<void> supprimerConversation(idExp, idDest) async => await collectionRoom
+      .document(idExp).collection('chats').document('$idExp$idDest').delete();
 
-  Future<void> sprmerMsgPourVous(idExp, idDest, idMsg) async {
-    return await collectionRoom.document(idExp)
-        .collection('chats').document('$idExp$idDest').collection('messages')
+
+  Future<void> sprmerMsgPourVous(idExp, idDest, idMsg) async => await collectionRoom
+      .document(idExp).collection('chats').document('$idExp$idDest').collection('messages')
         .document(idMsg).delete();
-  }
 
   Future<void> sprmerMsgPourTous(idExp, idDest, idMsg) async {
 
@@ -555,5 +527,64 @@ class ServiceBDD {
         .collection('chats').document('$idExp$idDest').collection('messages')
         .document(idMsg).delete();
   }
-}
+  
+  Stream<QuerySnapshot> get mesMessages => collectionRoom.document(idExp)
+        .collection('chats').document('$idExp$idDest').collection('messages')
+        .where('idExp', isEqualTo: idExp).snapshots();
 
+  Stream<QuerySnapshot> get nbreMesMsgImg => collectionRoom.document(idExp)
+        .collection('chats').document('$idExp$idDest').collection('messages')
+        .where('idExp', isEqualTo: idExp).where('msgTxt', isEqualTo:'')
+        .snapshots();
+
+  Stream<QuerySnapshot> get nbreSesMsgImg => collectionRoom.document(idExp)
+        .collection('chats').document('$idExp$idDest').collection('messages')
+        .where('idDest', isEqualTo: idExp).where('msgTxt', isEqualTo:'')
+        .snapshots();
+
+  Future<void> blockE() async => await collectionUtilisateurs.document(idDest)
+      .collection('bloque').document('$idDest$idExp').setData({'bloque':'bloqué'});
+
+  Future<void> deblockE() async => await collectionUtilisateurs.document(idDest)
+      .collection('bloque').document('$idDest$idExp').delete();
+
+  UserBlockE userBlockEFromSnapshot(DocumentSnapshot doc) =>
+      UserBlockE(isBlockE: doc.data['bloque'] ?? '');
+
+  Stream<UserBlockE> get blockdata => collectionUtilisateurs
+      .document(idDest).collection('bloque').document('$idDest$idExp')
+      .snapshots().map(userBlockEFromSnapshot);
+
+  //Ajouter un commentaire
+  Future<void> ajoutCommentaire(idUser, nomUser, imgUrl, idPost, msgCmtr) async {
+    String idCmtr = collectionPosts.document().documentID;
+    return await collectionPosts.document(idPost)
+        .collection('commentaires').document(idCmtr).setData({
+      'idCmtr' : idCmtr,
+      'idUser' : idUser,
+      'nomUser' : nomUser,
+      'idPost' : idPost,
+      'imgUrl' : imgUrl,
+      'msgCmtr' : msgCmtr,
+      'timestamp' : FieldValue.serverTimestamp()
+    });
+  }
+
+  List<Commentaire> listCommentaire(QuerySnapshot snapshot)
+  => snapshot.documents.map((doc) => Commentaire(
+    idCmtr: doc.data[ 'idCmtr'] ?? '',
+    idUser: doc.data['idUser'] ?? '',
+    nomUser: doc.data['nomUser'] ?? '',
+    imgUrl: doc.data['imgUrl'] ?? '',
+    idPost: doc.data['idPost'] ?? '',
+    msgCmtr: doc.data['msgCmtr'] ?? '',
+    timestamp: doc.data['timestamp'] ?? ''
+  )).toList();
+
+  Stream<List<Commentaire>> get commentaires => collectionPosts
+      .document(idPost).collection('commentaires').snapshots().map(listCommentaire);
+
+  Future<void> supprimerCmtr() async => await collectionPosts
+      .document(idPost).collection('commentaires').document(idCmtr).delete();
+
+}
