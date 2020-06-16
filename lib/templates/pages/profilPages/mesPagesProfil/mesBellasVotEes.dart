@@ -1,23 +1,23 @@
 import 'package:belafrikapp/models/bellaVotEe.dart';
+import 'package:belafrikapp/models/utilisateur.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class BellasVotEes extends StatefulWidget {
-  String idUtil;
-  BellasVotEes({this.idUtil});
+class MesBellasVotEs extends StatefulWidget {
   @override
-  _BellasVotEesState createState() => _BellasVotEesState();
+  _MesBellasVotEsState createState() => _MesBellasVotEsState();
 }
 
-class _BellasVotEesState extends State<BellasVotEes> {
+class _MesBellasVotEsState extends State<MesBellasVotEs> {
   @override
   Widget build(BuildContext context) {
 
     final bellaVotEe = Provider.of<List<BellaVotEe>>(context) ?? [];
+    final util = Provider.of<Utilisateur>(context);
 
     return  SliverList(
       delegate: SliverChildBuilderDelegate((context, index){
-        return bellaVotEe[index].idUser == widget.idUtil ? Padding(
+        return bellaVotEe[index].idUser == util.idUtil ? Padding(
           padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0, bottom: 4),
           child: Container(
             height: MediaQuery.of(context).size.height * 0.5,

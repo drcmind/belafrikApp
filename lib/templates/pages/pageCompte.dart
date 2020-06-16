@@ -1,5 +1,7 @@
 import 'package:belafrikapp/models/utilisateur.dart';
 import 'package:belafrikapp/services/authentification.dart';
+import 'package:belafrikapp/templates/pages/profilPages/mesPagesProfil/mesBellasVotEes.dart';
+import 'package:belafrikapp/templates/pages/profilPages/mesPagesProfil/mesDilemmesPostEs.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +12,9 @@ class PageCompte extends StatefulWidget {
 }
 
 class _PageCompteState extends State<PageCompte> {
+
+  int pagesAffichEe = 0;
+
   @override
   Widget build(BuildContext context) {
 
@@ -28,13 +33,14 @@ class _PageCompteState extends State<PageCompte> {
         slivers: <Widget>[
           SliverAppBar(
             backgroundColor: Colors.white,
+            floating: true,
             title: Text('Mon Compte', style: TextStyle(color: Colors.black),),
           ),
           SliverList(
             delegate: SliverChildListDelegate(
               [
                 Container(
-                  height: 220.0,
+                  height: MediaQuery.of(context).size.height * 0.47,
                   width: double.infinity,
                   child: Container(
                     decoration: BoxDecoration(
@@ -85,6 +91,22 @@ class _PageCompteState extends State<PageCompte> {
                                 Text('Membre depuis $date',
                                   style: TextStyle( color: Colors.white, fontSize: 14.0),)
                               ],
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(right: 8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[
+                                  MaterialButton(
+                                    onPressed: (){
+                                      ServiceAuth _auth = ServiceAuth();
+                                      _auth.signOut();
+                                    },
+                                    color: Colors.redAccent,
+                                    child: Text('Deconnexion', style: TextStyle(color: Colors.white),),
+                                  ),
+                                ],
+                              ),
                             )
                           ],
                         ),
@@ -92,23 +114,25 @@ class _PageCompteState extends State<PageCompte> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(right: 8.0),
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: MaterialButton(
-                      onPressed: (){
-                        ServiceAuth _auth = ServiceAuth();
-                        _auth.signOut();
-                      },
-                      color: Colors.redAccent,
-                      child: Text('Deconnexion', style: TextStyle(color: Colors.white),),
-                    ),
-                  ),
+                DefaultTabController(
+                    length: 2,
+                    child: TabBar(
+                        labelColor: Colors.red,
+                        onTap: (int tappedIndex){
+                          setState(() {
+                            pagesAffichEe = tappedIndex;
+                          });
+                        },
+                        tabs: <Widget>[
+                          Tab(text: 'Dilemme(s) posté(s)'),
+                          Tab(text: 'Bella(s) votée(s)')
+                        ]
+                    )
                 )
               ]
             ),
-          )
+          ),
+          pagesAffichEe == 0 ? MesDilemmesPostEs() : MesBellasVotEs()
         ],
       ),
     );

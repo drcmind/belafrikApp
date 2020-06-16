@@ -19,6 +19,7 @@ class _ListUtilState extends State<ListUtil> {
       scrollDirection: Axis.horizontal,
       itemCount: listUtil.length,
       itemBuilder: (context, index){
+
         return GestureDetector(
           onTap: (){
             Navigator.push(context, MaterialPageRoute(builder: (context) =>

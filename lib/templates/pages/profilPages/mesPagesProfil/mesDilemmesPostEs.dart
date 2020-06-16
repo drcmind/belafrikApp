@@ -1,24 +1,20 @@
 import 'package:belafrikapp/models/commentaire.dart';
 import 'package:belafrikapp/models/dilemmePost.dart';
-import 'package:belafrikapp/models/dilemmePoste.dart';
 import 'package:belafrikapp/models/utilisateur.dart';
 import 'package:belafrikapp/models/vote.dart';
 import 'package:belafrikapp/services/bdd.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 
-class ListDilemmePostE extends StatefulWidget {
-  String idUtil;
-  ListDilemmePostE({this.idUtil});
+class MesDilemmesPostEs extends StatefulWidget {
   @override
-  _ListDilemmePostEState createState() => _ListDilemmePostEState();
+  _MesDilemmesPostEsState createState() => _MesDilemmesPostEsState();
 }
 
-class _ListDilemmePostEState extends State<ListDilemmePostE> {
+class _MesDilemmesPostEsState extends State<MesDilemmesPostEs> {
   @override
   Widget build(BuildContext context) {
 
@@ -26,11 +22,11 @@ class _ListDilemmePostEState extends State<ListDilemmePostE> {
     final donnEeUtil = Provider.of<DonnEesUtil>(context);
     final utilisateur = Provider.of<Utilisateur>(context);
     bool buttonDesactivE = false;
-    
+
     return SliverList(
       delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            
+              (context, index) {
+
             final dateDeFirestore = dilemme[index].timestamp.toDate();
             String date = DateFormat.MMMd().format(dateDeFirestore);
             int totalVote = dilemme[index].totalVote - 1;
@@ -60,13 +56,13 @@ class _ListDilemmePostEState extends State<ListDilemmePostE> {
                         );
                         await pr.show();
                         await ServiceBDD().ajoutCommentaire(
-                            widget.idUtil, donnEeUtil.nomUtil, donnEeUtil.photoUrl,
+                            utilisateur.idUtil, donnEeUtil.nomUtil, donnEeUtil.photoUrl,
                             dilemme[index].idPost, messageController.text);
                         await pr.hide();
                         messageController.clear();
                       }
                     }
-                    return dilemme[index].utilisateur['idUtil'] == widget.idUtil ? Padding(
+                    return dilemme[index].utilisateur['idUtil'] == utilisateur.idUtil ? Padding(
                       padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
                       child: Container(
                         decoration: BoxDecoration(
@@ -138,7 +134,7 @@ class _ListDilemmePostEState extends State<ListDilemmePostE> {
                                                         )
                                                     );
                                                     await ServiceBDD().suppressionDilemme(
-                                                        dilemme[index].idPost, widget.idUtil, context);
+                                                        dilemme[index].idPost, utilisateur.idUtil, context);
                                                     Scaffold.of(context).showSnackBar(
                                                         SnackBar(
                                                           content: Text('Supprimé avec succès'),
@@ -502,7 +498,7 @@ class _ListDilemmePostEState extends State<ListDilemmePostE> {
                                               content: Text('Vote encours pour ${dilemme[index].bella1['nomB1']}'),
                                             )
                                         );
-                                        await ServiceBDD(idUtil: widget.idUtil)
+                                        await ServiceBDD(idUtil: utilisateur.idUtil)
                                             .onVoteB1(
                                             dilemme[index].idPost, donnEeUtil.idUtil,
                                             donnEeUtil.nomUtil, dilemme[index].bella1['idB1'],
@@ -551,7 +547,7 @@ class _ListDilemmePostEState extends State<ListDilemmePostE> {
                                               content: Text('Vote encours pour ${dilemme[index].bella2['nomB2']}'),
                                             )
                                         );
-                                        await ServiceBDD(idUtil: widget.idUtil)
+                                        await ServiceBDD(idUtil: utilisateur.idUtil)
                                             .onVoteB2(
                                             dilemme[index].idPost, utilisateur.idUtil,
                                             donnEeUtil.nomUtil, dilemme[index].bella2['idB2'],
@@ -594,7 +590,7 @@ class _ListDilemmePostEState extends State<ListDilemmePostE> {
               ),
             );
           },
-        childCount: dilemme.length
+          childCount: dilemme.length
       ),
     );
   }
@@ -663,4 +659,3 @@ class _ListDilemmePostEState extends State<ListDilemmePostE> {
     );
   }
 }
-
